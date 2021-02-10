@@ -13,4 +13,10 @@ router.post('/', (req, res, next) => {
   })
 })
 
+router.get('/:sampleId', (req, res, next) => {
+  const id = req.params.sampleId
+
+  res.status(200).json({ message: `you passed this: ${id}` })
+})
+
 module.exports = router
