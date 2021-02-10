@@ -19,4 +19,12 @@ router.get('/:sampleId', (req, res, next) => {
   res.status(200).json({ message: `you passed this: ${id}` })
 })
 
+router.patch('/:sampleId', (req, res, next) => {
+  res.status(200).json({ message: 'update' })
+})
+
+router.delete('/:sampleId', (req, res, next) => {
+  res.status(200).json({ message: 'delete' })
+})
+
 module.exports = router
