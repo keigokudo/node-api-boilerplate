@@ -8,8 +8,14 @@ router.get('/', (req, res, next) => {
 })
 
 router.post('/', (req, res, next) => {
+  const sample = {
+    name: req.body.name,
+    id: req.body.id,
+  }
+  console.log(req)
   res.status(201).json({
     message: 'handing POST requests to /sample',
+    sample: sample,
   })
 })
 
