@@ -2,8 +2,19 @@ const express = require('express')
 const app = express()
 const logger = require('morgan')
 const bodyParser = require('body-parser')
+require('dotenv').config()
+const mongoose = require('mongoose')
 
 const sampleRoutes = require('./routes/sample')
+
+const url =
+  'mongodb+srv://' +
+  process.env.MONGODB_USERNAME +
+  ':' +
+  process.env.MONGODB_PASSWORD +
+  '@cluster0.ei5mh.mongodb.net/?retryWrites=true&w=majority'
+
+mongoose.connect(url, { useUnifiedTopology: true, useNewUrlParser: true })
 
 // middlewares
 app.use(logger('dev'))
