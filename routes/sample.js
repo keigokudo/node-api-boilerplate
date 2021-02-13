@@ -1,5 +1,8 @@
 const express = require('express')
 const router = express.Router()
+const mongoose = require('mongoose')
+
+const Sample = require('../models/sample')
 
 router.get('/', (req, res, next) => {
   res.status(200).json({
@@ -8,21 +11,42 @@ router.get('/', (req, res, next) => {
 })
 
 router.post('/', (req, res, next) => {
-  const sample = {
+  const sample = new Sample({
+    _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
-    id: req.body.id,
-  }
-  console.log(req)
-  res.status(201).json({
-    message: 'handing POST requests to /sample',
-    sample: sample,
+    number: req.body.number,
   })
+  sample
+    .save()
+    .then((result) => {
+      console.log(result)
+      res.status(201).json({
+        message: 'handing POST requests to /sample',
+        createdData: result,
+      })
+    })
+    .catch((err) => {
+      console.log(err)
+      res.status(500).json({ error: err })
+    })
 })
 
 router.get('/:sampleId', (req, res, next) => {
   const id = req.params.sampleId
-
-  res.status(200).json({ message: `you passed this: ${id}` })
+  Sample.findById(id)
+    .exec()
+    .then((doc) => {
+      console.log('from db', doc)
+      if (doc) {
+        res.status(200).json(doc)
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+      res
+        .status(500)
+        .json({ message: 'No valid entry found for this sampleId', error: err })
+    })
 })
 
 router.patch('/:sampleId', (req, res, next) => {
