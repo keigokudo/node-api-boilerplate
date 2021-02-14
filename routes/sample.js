@@ -58,7 +58,22 @@ router.get('/:sampleId', (req, res, next) => {
 })
 
 router.patch('/:sampleId', (req, res, next) => {
-  res.status(200).json({ message: 'update' })
+  const id = req.params.sampleId
+  const updateOperations = {}
+  for (const ops of req.body) {
+    updateOperations[ops.propName] = ops.value
+  }
+
+  Sample.updateOne({ _id: id }, { $set: updateOperations })
+    .exec()
+    .then((result) => {
+      console.log(result)
+      res.status(200).json(result)
+    })
+    .catch((err) => {
+      console.log(err)
+      res.status(500).json({ error: err })
+    })
 })
 
 router.delete('/:sampleId', (req, res, next) => {
