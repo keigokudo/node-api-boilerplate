@@ -62,7 +62,17 @@ router.patch('/:sampleId', (req, res, next) => {
 })
 
 router.delete('/:sampleId', (req, res, next) => {
-  res.status(200).json({ message: 'delete' })
+  const id = req.params.sampleId
+  Sample.remove({ _id: id })
+    .exec()
+    .then((result) => {
+      res
+        .status(200)
+        .json({ message: `item deleted. sampleId: ${id}`, result: result })
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err })
+    })
 })
 
 module.exports = router
