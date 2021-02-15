@@ -34,8 +34,12 @@ router.post('/', (req, res, next) => {
     .then((result) => {
       console.log(result)
       res.status(201).json({
-        message: 'handing POST requests to /sample',
-        createdData: result,
+        message: 'data created',
+        createdData: {
+          _id: result.sampleId,
+          name: result.name,
+          number: result.number,
+        },
       })
     })
     .catch((err) => {
