@@ -6,11 +6,16 @@ const Sample = require('../models/sample')
 
 router.get('/', (req, res, next) => {
   Sample.find()
+    .select('_id name number')
     .limit(100)
     .exec()
     .then((docs) => {
+      const response = {
+        count: docs.length,
+        sample: docs,
+      }
       console.log(docs)
-      res.status(200).json(docs)
+      res.status(200).json(response)
     })
     .catch((err) => {
       console.log(err)
