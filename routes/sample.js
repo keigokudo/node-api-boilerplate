@@ -6,7 +6,7 @@ const Sample = require('../models/sample')
 
 router.get('/', (req, res, next) => {
   Sample.find()
-    .select('_id name number')
+    .select('_id name number') // as an alternative you can subtract with ('- __v')
     .limit(100)
     .exec()
     .then((docs) => {
@@ -51,6 +51,7 @@ router.post('/', (req, res, next) => {
 router.get('/:sampleId', (req, res, next) => {
   const id = req.params.sampleId
   Sample.findById(id)
+    .select('_id name number')
     .exec()
     .then((doc) => {
       console.log('from db', doc)
@@ -77,7 +78,7 @@ router.patch('/:sampleId', (req, res, next) => {
     .exec()
     .then((result) => {
       console.log(result)
-      res.status(200).json(result)
+      res.status(200).json({ message: 'data updated', result: result })
     })
     .catch((err) => {
       console.log(err)
