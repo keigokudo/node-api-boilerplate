@@ -1,6 +1,28 @@
 const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
+const multer = require('multer')
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './uploads/')
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname + '-' + new Date().toISOString())
+  },
+})
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+    // accept the file
+    cb(null, true)
+  } else {
+    // reject the file
+    cb(null, false)
+  }
+}
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 1024 * 1024 * 5, fileFilter: fileFilter },
+})
 
 const Sample = require('../models/sample')
 
@@ -23,7 +45,8 @@ router.get('/', (req, res, next) => {
     })
 })
 
-router.post('/', (req, res, next) => {
+router.post('/', upload.single('sampleImage'), (req, res, next) => {
+  console.log(req.file)
   const sample = new Sample({
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
