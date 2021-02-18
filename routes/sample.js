@@ -7,7 +7,7 @@ const storage = multer.diskStorage({
     cb(null, './uploads/')
   },
   filename: (req, file, cb) => {
-    cb(null, file.originalname + '-' + new Date().toISOString())
+    cb(null, new Date().toISOString() + '-' + file.originalname)
   },
 })
 const fileFilter = (req, file, cb) => {
@@ -28,7 +28,7 @@ const Sample = require('../models/sample')
 
 router.get('/', (req, res, next) => {
   Sample.find()
-    .select('_id name number') // as an alternative you can subtract with ('- __v')
+    .select('_id name number image') // as an alternative you can subtract with ('- __v')
     .limit(100)
     .exec()
     .then((docs) => {
@@ -51,6 +51,7 @@ router.post('/', upload.single('sampleImage'), (req, res, next) => {
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
     number: req.body.number,
+    image: req.file.path,
   })
   sample
     .save()
@@ -74,7 +75,7 @@ router.post('/', upload.single('sampleImage'), (req, res, next) => {
 router.get('/:sampleId', (req, res, next) => {
   const id = req.params.sampleId
   Sample.findById(id)
-    .select('_id name number')
+    .select('_id name number image')
     .exec()
     .then((doc) => {
       console.log('from db', doc)

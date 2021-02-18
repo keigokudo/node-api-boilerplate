@@ -36,6 +36,8 @@ app.use((req, res, next) => {
   next()
 })
 
+// allow route '/uploads'
+app.use('/uploads', express.static('uploads'))
 // routes
 app.use('/sample', sampleRoutes)
 
