@@ -6,6 +6,7 @@ require('dotenv').config()
 const mongoose = require('mongoose')
 
 const sampleRoutes = require('./routes/sample')
+const userRoutes = require('./routes/user')
 
 const uri =
   'mongodb+srv://' +
@@ -40,6 +41,7 @@ app.use((req, res, next) => {
 app.use('/uploads', express.static('uploads'))
 // routes
 app.use('/sample', sampleRoutes)
+app.use('/user', userRoutes)
 
 // error handling
 app.use((req, res, next) => {
