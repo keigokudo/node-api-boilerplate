@@ -15,7 +15,11 @@ const uri =
   process.env.MONGODB_PASSWORD +
   '@cluster0.ei5mh.mongodb.net/?retryWrites=true&w=majority'
 
-mongoose.connect(uri, { useUnifiedTopology: true, useNewUrlParser: true })
+mongoose.connect(uri, {
+  useUnifiedTopology: true,
+  useNewUrlParser: true,
+  useCreateIndex: true,
+})
 
 // middlewares
 app.use(logger('dev'))
