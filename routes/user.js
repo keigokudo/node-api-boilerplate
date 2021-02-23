@@ -6,11 +6,12 @@ const bcrypt = require('bcrypt')
 const User = require('../models/user')
 
 router.post('/signup', (req, res, next) => {
-  emailExists(req).catch((err) => {
-    res.status(409).json({
-      message: err.message,
-    })
-  })
+  // Need to resolve UnhandledPromiseRejectionWarning
+  // emailExists(req).catch((err) => {
+  //   res.status(409).json({
+  //     message: err.message,
+  //   })
+  // })
 
   const saltRounds = 10
   const hash = bcrypt.hashSync(req.body.password, saltRounds)
