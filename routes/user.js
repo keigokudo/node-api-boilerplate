@@ -5,7 +5,13 @@ const bcrypt = require('bcrypt')
 
 const User = require('../models/user')
 
-router.post('/signup', async (req, res, next) => {
+router.post('/signup', (req, res, next) => {
+  emailExists(req).catch((err) => {
+    res.status(409).json({
+      message: err.message,
+    })
+  })
+
   const saltRounds = 10
   const hash = bcrypt.hashSync(req.body.password, saltRounds)
   const user = new User({
@@ -29,6 +35,15 @@ router.post('/signup', async (req, res, next) => {
       })
     })
 })
+
+// validation for the duplication of the email in user collection
+const emailExists = async (req) => {
+  const post = await User.findOne({ email: req.body.email })
+  console.log('post', post)
+  if (post.email) {
+    throw new Error('Email already exists')
+  }
+}
 
 router.delete('/:userId', (req, res, next) => {
   User.remove({ _id: req.params.userId })
