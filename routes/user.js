@@ -46,6 +46,36 @@ const emailExists = async (req) => {
   }
 }
 
+router.post('/login', (req, res, next) => {
+  User.findOne({ email: req.body.email })
+    .exec()
+    .then((user) => {
+      // check if the user exists
+      if (!user) {
+        return res.status(401).json({
+          message: 'Auth failed',
+        })
+      }
+      bcrypt.compare(req.body.password, user.password, (err, result) => {
+        if (result) {
+          return res.status(200).json({
+            message: 'Auth successful',
+          })
+        } else {
+          return res.status(401).json({
+            message: 'Auth failed!',
+          })
+        }
+      })
+    })
+    .catch((err) => {
+      console.log(err)
+      res.status(500).json({
+        error: err,
+      })
+    })
+})
+
 router.delete('/:userId', (req, res, next) => {
   User.remove({ _id: req.params.userId })
     .exec()
