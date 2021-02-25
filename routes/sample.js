@@ -29,24 +29,9 @@ const upload = multer({
   limits: { fileSize: 1024 * 1024 * 5, fileFilter: fileFilter },
 })
 
-router.get('/', (req, res, next) => {
-  Sample.find()
-    .select('_id name number image') // as an alternative you can subtract with ('- __v')
-    .limit(100)
-    .exec()
-    .then((docs) => {
-      const response = {
-        count: docs.length,
-        sample: docs,
-      }
-      console.log(docs)
-      res.status(200).json(response)
-    })
-    .catch((err) => {
-      console.log(err)
-      res.status(500).json({ error: err })
-    })
-})
+const sampleController = require('../controller/sample')
+
+router.get('/', sampleController.sampleGetAll)
 
 router.post('/', auth, upload.single('sampleImage'), (req, res, next) => {
   console.log(req.file)
