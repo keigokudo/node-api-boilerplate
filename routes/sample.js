@@ -1,6 +1,11 @@
 const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
+
+const Sample = require('../models/sample')
+const auth = require('../middleware/auth')
+
+// config of multer
 const multer = require('multer')
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -24,8 +29,6 @@ const upload = multer({
   limits: { fileSize: 1024 * 1024 * 5, fileFilter: fileFilter },
 })
 
-const Sample = require('../models/sample')
-
 router.get('/', (req, res, next) => {
   Sample.find()
     .select('_id name number image') // as an alternative you can subtract with ('- __v')
@@ -45,7 +48,7 @@ router.get('/', (req, res, next) => {
     })
 })
 
-router.post('/', upload.single('sampleImage'), (req, res, next) => {
+router.post('/', auth, upload.single('sampleImage'), (req, res, next) => {
   console.log(req.file)
   const sample = new Sample({
     _id: new mongoose.Types.ObjectId(),
@@ -91,7 +94,7 @@ router.get('/:sampleId', (req, res, next) => {
     })
 })
 
-router.patch('/:sampleId', (req, res, next) => {
+router.patch('/:sampleId', auth, (req, res, next) => {
   const id = req.params.sampleId
   const updateOperations = {}
   for (const ops of req.body) {
@@ -110,7 +113,7 @@ router.patch('/:sampleId', (req, res, next) => {
     })
 })
 
-router.delete('/:sampleId', (req, res, next) => {
+router.delete('/:sampleId', auth, (req, res, next) => {
   const id = req.params.sampleId
   Sample.remove({ _id: id })
     .exec()

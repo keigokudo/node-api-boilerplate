@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
 const User = require('../models/user')
+const auth = require('../middleware/auth')
 
 router.post('/signup', (req, res, next) => {
   // Need to resolve UnhandledPromiseRejectionWarning
@@ -89,7 +90,7 @@ router.post('/login', (req, res, next) => {
     })
 })
 
-router.delete('/:userId', (req, res, next) => {
+router.delete('/:userId', auth, (req, res, next) => {
   User.remove({ _id: req.params.userId })
     .exec()
     .then((result) =>
