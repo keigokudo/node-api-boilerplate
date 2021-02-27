@@ -3,39 +3,19 @@ const router = express.Router()
 const mongoose = require('mongoose')
 
 const Sample = require('../models/sample')
-const auth = require('../middleware/auth')
+const userAuth = require('../middleware/auth')
 const multerUpload = require('../middleware/multer')
 
 const sampleController = require('../controller/sample')
 
 router.get('/', sampleController.sampleGetAll)
 
-router.post('/', auth, multerUpload.single('sampleImage'), (req, res, next) => {
-  console.log(req.file)
-  const sample = new Sample({
-    _id: new mongoose.Types.ObjectId(),
-    name: req.body.name,
-    number: req.body.number,
-    image: req.file.path,
-  })
-  sample
-    .save()
-    .then((result) => {
-      console.log(result)
-      res.status(201).json({
-        message: 'data created',
-        createdData: {
-          _id: result.sampleId,
-          name: result.name,
-          number: result.number,
-        },
-      })
-    })
-    .catch((err) => {
-      console.log(err)
-      res.status(500).json({ error: err })
-    })
-})
+router.post(
+  '/',
+  userAuth,
+  multerUpload.single('sampleImage'),
+  sampleController.samplePost
+)
 
 router.get('/:sampleId', (req, res, next) => {
   const id = req.params.sampleId
@@ -56,7 +36,7 @@ router.get('/:sampleId', (req, res, next) => {
     })
 })
 
-router.patch('/:sampleId', auth, (req, res, next) => {
+router.patch('/:sampleId', userAuth, (req, res, next) => {
   const id = req.params.sampleId
   const updateOperations = {}
   for (const ops of req.body) {
@@ -75,7 +55,7 @@ router.patch('/:sampleId', auth, (req, res, next) => {
     })
 })
 
-router.delete('/:sampleId', auth, (req, res, next) => {
+router.delete('/:sampleId', userAuth, (req, res, next) => {
   const id = req.params.sampleId
   Sample.remove({ _id: id })
     .exec()
