@@ -19,24 +19,7 @@ router.post(
   sampleController.samplePost
 )
 
-router.patch('/:sampleId', userAuth, (req, res, next) => {
-  const id = req.params.sampleId
-  const updateOperations = {}
-  for (const ops of req.body) {
-    updateOperations[ops.propName] = ops.value
-  }
-
-  Sample.updateOne({ _id: id }, { $set: updateOperations })
-    .exec()
-    .then((result) => {
-      console.log(result)
-      res.status(200).json({ message: 'data updated', result: result })
-    })
-    .catch((err) => {
-      console.log(err)
-      res.status(500).json({ error: err })
-    })
-})
+router.patch('/:sampleId', userAuth, sampleController.samplePatch)
 
 router.delete('/:sampleId', userAuth, (req, res, next) => {
   const id = req.params.sampleId
