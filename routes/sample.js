@@ -21,18 +21,6 @@ router.post(
 
 router.patch('/:sampleId', userAuth, sampleController.samplePatch)
 
-router.delete('/:sampleId', userAuth, (req, res, next) => {
-  const id = req.params.sampleId
-  Sample.remove({ _id: id })
-    .exec()
-    .then((result) => {
-      res
-        .status(200)
-        .json({ message: `item deleted. sampleId: ${id}`, result: result })
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err })
-    })
-})
+router.delete('/:sampleId', userAuth, sampleController.sampleDelete)
 
 module.exports = router
