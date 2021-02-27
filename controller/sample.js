@@ -21,6 +21,25 @@ exports.sampleGetAll = (req, res, next) => {
     })
 }
 
+exports.sampleGetOne = (req, res, next) => {
+  const id = req.params.sampleId
+  Sample.findById(id)
+    .select('_id name number image')
+    .exec()
+    .then((doc) => {
+      console.log('from db', doc)
+      if (doc) {
+        res.status(200).json(doc)
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+      res
+        .status(500)
+        .json({ message: 'No valid entry found for this sampleId', error: err })
+    })
+}
+
 exports.samplePost = (req, res, next) => {
   console.log(req.file)
   const sample = new Sample({

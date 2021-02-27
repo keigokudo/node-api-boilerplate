@@ -10,31 +10,14 @@ const sampleController = require('../controller/sample')
 
 router.get('/', sampleController.sampleGetAll)
 
+router.get('/:sampleId', sampleController.sampleGetOne)
+
 router.post(
   '/',
   userAuth,
   multerUpload.single('sampleImage'),
   sampleController.samplePost
 )
-
-router.get('/:sampleId', (req, res, next) => {
-  const id = req.params.sampleId
-  Sample.findById(id)
-    .select('_id name number image')
-    .exec()
-    .then((doc) => {
-      console.log('from db', doc)
-      if (doc) {
-        res.status(200).json(doc)
-      }
-    })
-    .catch((err) => {
-      console.log(err)
-      res
-        .status(500)
-        .json({ message: 'No valid entry found for this sampleId', error: err })
-    })
-})
 
 router.patch('/:sampleId', userAuth, (req, res, next) => {
   const id = req.params.sampleId
