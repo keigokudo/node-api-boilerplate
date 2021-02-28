@@ -78,7 +78,7 @@ exports.samplePatch = (req, res, next) => {
     .exec()
     .then((result) => {
       console.log(result)
-      res.status(200).json({ message: 'data updated', result: result })
+      res.status(200).json({ message: 'data updated', id: id })
     })
     .catch((err) => {
       console.log(err)
