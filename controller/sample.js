@@ -41,7 +41,6 @@ exports.sampleGetOne = (req, res, next) => {
 }
 
 exports.samplePost = (req, res, next) => {
-  console.log(req.file)
   const sample = new Sample({
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
@@ -58,6 +57,7 @@ exports.samplePost = (req, res, next) => {
           _id: result.sampleId,
           name: result.name,
           number: result.number,
+          image: req.file.originalname,
         },
       })
     })
